@@ -13,5 +13,25 @@
     "file": "release.mp3",
     "seconds": 35.68,
     "title": "The release"
+  },
+  "debate-remote-2": {
+    "file": "debate-remote-2.mp3",
+    "seconds": 53.47,
+    "title": "Should remote work be the default?"
+  },
+  "debate-tabs-2": {
+    "file": "debate-tabs-2.mp3",
+    "seconds": 46.79,
+    "title": "Tabs or spaces?"
+  },
+  "debate-phones-3": {
+    "file": "debate-phones-3.mp3",
+    "seconds": 47.1,
+    "title": "Should phones be banned in class?"
+  },
+  "debate-week-2": {
+    "file": "debate-week-2.mp3",
+    "seconds": 47.07,
+    "title": "Is a four-day week better?"
   }
 }
