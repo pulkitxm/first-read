@@ -1,0 +1,14 @@
+{
+  "narrator": {
+    "id": "638893dc81e241c79356f02ea1ed28f6",
+    "label": "Calm Narrator"
+  },
+  "cast": [
+    { "id": "bf322df2096a46f18c579d0baa36f41d", "label": "Adrian" },
+    { "id": "319010b746ea48fe8137531bb52caa49", "label": "Deep Narrator" },
+    { "id": "c70cfb98867a4bfb9ae20d2401257b92", "label": "Delia" },
+    { "id": "f3a2b90078d54a65af4b95f63bc7798e", "label": "Sheila" },
+    { "id": "9e284ae196b04eaa958a823b0029bcce", "label": "Clear Speaker" },
+    { "id": "25d8ff6402a64817ac16778106b3278a", "label": "Warm Voice" }
+  ]
+}

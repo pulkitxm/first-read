@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First Read</title>
+    <meta name="description" content="Hear a scene, a chat, or a changelog before you record it." />
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@460;560&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/app.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">Fish Audio, drama-3</p>
+        <h1>First read.</h1>
+        <p class="lede">Paste a scene, a chat, or a changelog. Hear it with a stable cast before you record it or ship it.</p>
+      </header>
+      <section class="layout">
+        <form id="desk">
+          <div class="examples" id="examples"></div>
+          <label for="script">Script</label>
+          <textarea id="script" rows="16" placeholder="LENA&#10;(quietly)&#10;We're closed."></textarea>
+          <div class="row">
+            <button id="go" type="submit">Read it</button>
+            <p id="status" class="status" role="status"></p>
+          </div>
+        </form>
+        <section id="stage" class="stage" hidden>
+          <p id="kind" class="kind"></p>
+          <ul id="cast" class="cast"></ul>
+          <audio id="player" controls preload="none"></audio>
+          <a id="download" download="first-read.mp3">Download mp3</a>
+          <ol id="lines"></ol>
+        </section>
+      </section>
+    </main>
+    <footer>
+      <p>Same character name, same voice, every render. Voices live in voices.json.</p>
+      <p><a href="https://github.com/pulkitxm/first-read">pulkitxm/first-read</a></p>
+    </footer>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
