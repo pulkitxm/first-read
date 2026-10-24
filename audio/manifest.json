@@ -1,0 +1,17 @@
+{
+  "counter": {
+    "file": "counter.mp3",
+    "seconds": 28.11,
+    "title": "The counter"
+  },
+  "support": {
+    "file": "support.mp3",
+    "seconds": 24.53,
+    "title": "The refund"
+  },
+  "release": {
+    "file": "release.mp3",
+    "seconds": 35.68,
+    "title": "The release"
+  }
+}
