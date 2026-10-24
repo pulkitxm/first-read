@@ -147,12 +147,21 @@ audio { width: 100%; margin: 8px 0 12px; }
 
 #lines li {
   display: grid;
-  grid-template-columns: 110px 1fr;
+  grid-template-columns: 11.5rem 1fr;
   gap: 10px;
-  padding: 10px 0;
+  padding: 10px 8px;
   border-top: 1px solid var(--line);
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 13px;
+}
+
+#lines li.waiting { display: none; }
+
+#lines li.said { opacity: 0.62; }
+
+#lines li.speaking {
+  background: rgba(230, 161, 90, 0.16);
+  border-radius: 8px;
 }
 
 .name { color: var(--amber); }

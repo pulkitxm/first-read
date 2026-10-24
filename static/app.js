@@ -11,6 +11,7 @@ const download = document.querySelector("#download");
 
 let objectUrl = null;
 let examples = [];
+let liveTimer = null;
 
 function setStatus(text) {
   statusEl.textContent = text || "";
@@ -48,6 +49,87 @@ function show(read, audioUrl) {
     download.hidden = false;
     player.src = audioUrl;
     download.href = audioUrl;
+    player.play().catch(() => {});
+  }
+  stage.hidden = false;
+  stage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function showLive(read, audioUrl) {
+  if (liveTimer) {
+    clearInterval(liveTimer);
+    liveTimer = null;
+  }
+  kindEl.textContent = read.topic ? `live · ${read.topic}` : "live";
+  castEl.replaceChildren();
+  for (const person of read.cast) {
+    const item = document.createElement("li");
+    item.textContent = `${person.name} · ${person.voice}`;
+    castEl.append(item);
+  }
+  linesEl.replaceChildren();
+  const items = read.lines.map((line) => {
+    const item = document.createElement("li");
+    item.className = "waiting";
+    const name = document.createElement("span");
+    name.className = "name";
+    name.textContent = line.direction ? `${line.name} (${line.direction})` : line.name;
+    const said = document.createElement("span");
+    said.textContent = line.text;
+    item.append(name, said);
+    linesEl.append(item);
+    return item;
+  });
+  const weights = read.lines.map((line) => Math.max(line.text.length, 1));
+  const weightTotal = weights.reduce((sum, weight) => sum + weight, 0);
+  const ends = [];
+  let covered = 0;
+  for (const weight of weights) {
+    covered += weight;
+    ends.push(covered / weightTotal);
+  }
+  const mark = (index) => {
+    items.forEach((item, itemIndex) => {
+      item.classList.toggle("waiting", itemIndex > index);
+      item.classList.toggle("speaking", itemIndex === index);
+      item.classList.toggle("said", itemIndex < index);
+    });
+    const current = items[index];
+    if (current) current.scrollIntoView({ block: "nearest" });
+  };
+  mark(0);
+  if (objectUrl && objectUrl !== audioUrl) {
+    URL.revokeObjectURL(objectUrl);
+    objectUrl = null;
+  }
+  player.ontimeupdate = null;
+  if (!audioUrl) {
+    player.removeAttribute("src");
+    player.hidden = true;
+    download.hidden = true;
+    let index = 0;
+    liveTimer = setInterval(() => {
+      index += 1;
+      if (index >= items.length) {
+        clearInterval(liveTimer);
+        liveTimer = null;
+        return;
+      }
+      mark(index);
+    }, 3400);
+  } else {
+    player.hidden = false;
+    download.hidden = false;
+    player.src = audioUrl;
+    download.href = audioUrl;
+    player.onloadedmetadata = () => {
+      player.ontimeupdate = () => {
+        const ratio = player.duration ? player.currentTime / player.duration : 0;
+        let index = ends.findIndex((end) => ratio < end);
+        if (index < 0) index = items.length - 1;
+        mark(index);
+      };
+    };
     player.play().catch(() => {});
   }
   stage.hidden = false;
@@ -115,17 +197,17 @@ async function runDebate() {
     }
     scriptEl.value = payload.script || "";
     if (payload.audio) {
-      show(payload, payload.audio);
-      setDebateStatus("");
+      showLive(payload, payload.audio);
+      setDebateStatus("Live");
     } else if (payload.audio_base64) {
       const bytes = Uint8Array.from(atob(payload.audio_base64), (char) => char.charCodeAt(0));
       if (objectUrl) URL.revokeObjectURL(objectUrl);
       objectUrl = URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" }));
-      show(payload, objectUrl);
-      setDebateStatus("");
+      showLive(payload, objectUrl);
+      setDebateStatus("Live");
     } else {
-      show(payload, null);
-      setDebateStatus(payload.note || "The script is ready. Add FISH_API_KEY to hear a topic that is not recorded yet.");
+      showLive(payload, null);
+      setDebateStatus(payload.note || "Live script. Add FISH_API_KEY to hear a topic that is not recorded yet.");
     }
   } catch (error) {
     setDebateStatus("The debate failed.");
