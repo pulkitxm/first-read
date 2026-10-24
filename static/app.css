@@ -40,7 +40,41 @@ h1 {
   line-height: 0.9;
 }
 
-.lede { max-width: 38rem; margin: 0; color: var(--faint); font-size: 18px; }
+.lede { max-width: 40rem; margin: 0; color: var(--faint); font-size: 18px; }
+
+h2 {
+  margin: 0 0 12px;
+  font-weight: 560;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.debate {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.debate input {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 18px;
+}
+
+.voices { display: flex; gap: 8px; }
+
+.voices button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
 
 .layout {
   display: grid;

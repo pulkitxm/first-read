@@ -6,6 +6,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
+from debate import build_debate, preset_cards
 from fish import load_env, speak_chunks
 from readthrough import ScriptError, prepare
 
@@ -74,6 +75,18 @@ class App(BaseHTTPRequestHandler):
         if path == "/api/examples":
             self._json(200, {"examples": example_cards()})
             return
+        if path == "/api/debates":
+            cards = []
+            for card in preset_cards():
+                file_name = f"debate-{card['id']}-{card['speakers']}.mp3"
+                cards.append(
+                    {
+                        **card,
+                        "audio": f"/audio/{file_name}" if (AUDIO / file_name).is_file() else None,
+                    }
+                )
+            self._json(200, {"debates": cards})
+            return
         if path.startswith("/static/"):
             name = Path(path).name
             types = {".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml"}
@@ -85,8 +98,52 @@ class App(BaseHTTPRequestHandler):
             return
         self._json(404, {"error": "Missing."})
 
+    def _debate(self):
+        length = int(self.headers.get("Content-Length", "0") or "0")
+        if length > 20_000:
+            self._json(413, {"error": "That topic is too long."})
+            return
+        try:
+            payload = json.loads(self.rfile.read(length).decode() or "{}")
+            debate = build_debate(
+                str(payload.get("topic", "")),
+                int(payload.get("speakers", 2)),
+                int(payload.get("extra_rounds", 0)),
+            )
+        except ScriptError as error:
+            self._json(400, {"error": str(error)})
+            return
+        except (json.JSONDecodeError, UnicodeDecodeError, TypeError, ValueError):
+            self._json(400, {"error": "Send a topic and two or three voices."})
+            return
+        self._debate_response(debate)
+
+    def _debate_response(self, debate):
+        file_name = f"debate-{debate['id']}-{debate['speakers']}.mp3" if debate["id"] else ""
+        recorded = AUDIO / file_name if file_name else None
+        body = {
+            "kind": "debate",
+            "topic": debate["topic"],
+            "lines": debate["lines"],
+            "cast": debate["cast"],
+            "script": debate["script"],
+        }
+        if debate["preset"] and recorded and recorded.is_file():
+            self._json(200, {**body, "audio": f"/audio/{file_name}"})
+            return
+        try:
+            audio = speak_chunks(debate["chunks"])
+        except RuntimeError as error:
+            self._json(200, {**body, "audio": None, "note": str(error)})
+            return
+        self._json(200, {**body, "audio_base64": base64.b64encode(audio).decode(), "mime": "audio/mpeg"})
+
     def do_POST(self):
-        if urlparse(self.path).path != "/api/read":
+        path = urlparse(self.path).path
+        if path == "/api/debate":
+            self._debate()
+            return
+        if path != "/api/read":
             self._json(404, {"error": "Missing."})
             return
         length = int(self.headers.get("Content-Length", "0") or "0")

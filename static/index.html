@@ -16,8 +16,25 @@
       <header>
         <p class="eyebrow">Fish Audio, drama-3</p>
         <h1>First read.</h1>
-        <p class="lede">Paste a scene, a chat, or a changelog. Hear it with a stable cast before you record it or ship it.</p>
+        <p class="lede">Give it a topic and two or three voices will debate it. Or paste a scene, a chat, or a changelog and hear that instead.</p>
       </header>
+      <section class="debate">
+        <h2>Debate</h2>
+        <form id="debate-form">
+          <label for="topic">Topic</label>
+          <input id="topic" name="topic" maxlength="90" placeholder="Should remote work be the default?" required />
+          <div class="row">
+            <div class="voices" id="speaker-count">
+              <button type="button" data-speakers="2" aria-pressed="true">Two voices</button>
+              <button type="button" data-speakers="3" aria-pressed="false">Three voices</button>
+            </div>
+            <button id="debate-go" type="submit">Start the debate</button>
+            <button id="debate-more" type="button">Another round</button>
+          </div>
+          <div class="examples" id="topics"></div>
+          <p id="debate-status" class="status" role="status"></p>
+        </form>
+      </section>
       <section class="layout">
         <form id="desk">
           <div class="examples" id="examples"></div>

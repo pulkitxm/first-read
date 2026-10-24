@@ -1,6 +1,6 @@
 # First Read
 
-Hear a scene, a chat, or a changelog before you record it or ship it.
+Hear a debate on a topic you type, or a scene, a chat, or a changelog before you record it or ship it.
 
 Paste what you already wrote. First Read casts a stable voice per character and performs the read with Fish Audio's drama-3 model. The same name keeps the same voice the next time you render.
 
@@ -12,7 +12,9 @@ python3 server.py
 
 Open http://127.0.0.1:8791
 
-Three examples play with no key: a shop scene, a support chat, and a release note. A new read bills your Fish Audio developer balance.
+Open the page and start a debate. Preset topics already have audio: remote work, tabs or spaces, phones in class, and a four-day week. Two or three voices. Another round keeps the argument going. A topic that is not in the list writes a debate from a fixed pattern until a model is connected.
+
+The older examples still play with no key: a shop scene, a support chat, and a release note. A new read bills your Fish Audio developer balance.
 
 ```bash
 export FISH_API_KEY=your_key
